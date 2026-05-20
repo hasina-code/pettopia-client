@@ -152,13 +152,15 @@ const Banner = () => {
           />
 
           
-          <div className="hidden md:block absolute top-0 left-10 bg-white text-black px-4 py-2 rounded-xl text-sm shadow-xl">
-            <Dog className="text-yellow-500" size={20} /> 1000+ Pets Adopted
-          </div>
+         <div className="hidden md:flex absolute top-0 left-10 bg-white text-black px-4 py-2 rounded-xl text-sm shadow-xl items-center gap-2">
+  <Dog className="text-yellow-500" size={16} />
+  <span>1000+ Pets Adopted</span>
+</div>
 
-          <div className="hidden md:block absolute bottom-0 right-10 bg-white text-black px-4 py-2 rounded-xl text-sm shadow-xl">
-            <Heart className="text-red-500" size={20} /> Find Your Best Friend
-          </div>
+          <div className="hidden md:flex absolute bottom-0 right-10 bg-white text-black px-4 py-2 rounded-xl text-sm shadow-xl items-center gap-2">
+  <Heart className="text-red-500" size={16} />
+  <span>Find Your Best Friend</span>
+</div>
 
         </motion.div>
       </div>
