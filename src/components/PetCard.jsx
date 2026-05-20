@@ -55,13 +55,13 @@ export default function PetCard({ pet }) {
           href={`/pet-details/${pet._id}`} 
           className="flex-1 text-center py-3 rounded-xl text-xs font-bold border border-slate-700 text-slate-300 hover:bg-slate-800 transition-all"
         >
-          VIEW
+          View Details
         </Link>
         <Link 
           href={`/pet-details/${pet._id}`} 
           className="flex-1 text-center py-3 rounded-xl text-xs font-bold bg-gradient-to-r from-pink-500 to-cyan-500 text-white hover:opacity-90 transition-all"
         >
-          ADOPT
+          ADOPT Now
         </Link>
       </div>
     </div>
