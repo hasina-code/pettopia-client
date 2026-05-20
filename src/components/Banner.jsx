@@ -2,17 +2,19 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Heart, PawPrint, ShieldCheck } from "lucide-react";
+import { Dog, Heart, PawPrint, ShieldCheck } from "lucide-react";
 
 const Banner = () => {
   return (
     <section className="relative overflow-hidden bg-slate-950 text-white">
 
-      {/* Background Glow */}
+     
       <div className="absolute top-0 left-0 w-60 md:w-72 lg:w-96 h-60 md:h-72 lg:h-96 bg-pink-500/20 rounded-full blur-3xl"></div>
       <div className="absolute bottom-0 right-0 w-72 md:w-96 lg:w-[500px] h-72 md:h-96 lg:h-[500px] bg-cyan-500/20 rounded-full blur-3xl"></div>
 
-      {/* Floating Icons (hidden on mobile for performance) */}
+      
+
+
       <motion.div
         animate={{ y: [0, -20, 0] }}
         transition={{ duration: 4, repeat: Infinity }}
@@ -31,7 +33,7 @@ const Banner = () => {
 
       <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 py-14 md:py-20 lg:py-28 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
 
-        {/* LEFT CONTENT */}
+        
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
@@ -115,7 +117,7 @@ const Banner = () => {
           className="relative h-[350px] sm:h-[450px] md:h-[550px] lg:h-[600px] flex justify-center items-center"
         >
 
-          {/* Circle */}
+          
           <motion.div
             animate={{ rotate: 360 }}
             transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
@@ -140,7 +142,7 @@ const Banner = () => {
             alt="cat"
           />
 
-          {/* Right Image (hide on mobile) */}
+        
           <motion.img
             animate={{ y: [0, -10, 0] }}
             transition={{ duration: 6, repeat: Infinity }}
@@ -149,13 +151,13 @@ const Banner = () => {
             alt="pet"
           />
 
-          {/* Badges (hidden on very small screens) */}
+          
           <div className="hidden md:block absolute top-0 left-10 bg-white text-black px-4 py-2 rounded-xl text-sm shadow-xl">
-            🐶 1000+ Pets Adopted
+            <Dog className="text-yellow-500" size={20} /> 1000+ Pets Adopted
           </div>
 
           <div className="hidden md:block absolute bottom-0 right-10 bg-white text-black px-4 py-2 rounded-xl text-sm shadow-xl">
-            ❤️ Find Your Best Friend
+            <Heart className="text-red-500" size={20} /> Find Your Best Friend
           </div>
 
         </motion.div>

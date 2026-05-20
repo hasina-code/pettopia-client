@@ -51,7 +51,7 @@ export default function Navbar() {
     />
   </div>
   
-  {/* টেক্সট */}
+  
   <span className="text-xl font-black bg-gradient-to-r from-pink-400 to-cyan-400 bg-clip-text text-transparent tracking-tight">
     PetTopia
   </span>
