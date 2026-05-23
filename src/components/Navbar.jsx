@@ -103,6 +103,16 @@ export default function Navbar() {
               >
                 <PlusCircle size={14} /> Add Pet
               </Link>
+              <Link
+                href="/dashboard/add-pet"
+                className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-bold tracking-wide transition-all ${
+                  pathname === "/dashboard/add-pet"
+                    ? "bg-[#1e1b4b] text-pink-400 border border-pink-500/20 shadow-md"
+                    : "text-slate-400 hover:text-slate-200"
+                }`}
+              >
+                <PlusCircle size={14} /> My Listings
+              </Link>
             </>
           )}
         </div>
@@ -147,35 +157,40 @@ export default function Navbar() {
                 <ChevronDown size={12} className={`text-slate-500 transition-transform duration-200 ${dropdownOpen ? "rotate-180" : ""}`} />
               </button>
 
-              {dropdownOpen && (
-                <div className="absolute right-0 mt-3 w-64 bg-[#0f172a] border border-slate-800 rounded-2xl shadow-2xl overflow-hidden z-50 backdrop-blur-md">
-                  
-                  <div className="p-4 bg-slate-950/40 border-b border-slate-800/50">
-                    <p className="text-xs font-black text-slate-200 truncate">{session.user.name}</p>
-                    <p className="text-[11px] text-slate-500 font-medium truncate mt-0.5">{session.user.email}</p>
-                  </div>
+             {dropdownOpen && (
+  <div className="absolute right-0 mt-3 w-64 bg-[#0f172a] border border-slate-800 rounded-2xl shadow-2xl overflow-hidden z-50 backdrop-blur-md">
+    
+    {/* ইউজার প্রোফাইল ইনফো */}
+    <div className="p-4 bg-slate-950/40 border-b border-slate-800/50">
+      <p className="text-xs font-black text-slate-200 truncate">{session.user.name}</p>
+      <p className="text-[11px] text-slate-500 font-medium truncate mt-0.5">{session.user.email}</p>
+    </div>
 
-                  <div className="p-2 space-y-1">
-                    <Link
-                      href="/dashboard/my-requests"
-                      onClick={() => setDropdownOpen(false)}
-                      className="flex items-center gap-2 w-full px-4 py-2.5 bg-[#fbc02d] hover:bg-[#f9a825] text-slate-950 font-black rounded-xl text-xs transition-all shadow-md"
-                    >
-                      <LayoutDashboard size={14} className="stroke-[2.5]" />
-                      Dashboard
-                    </Link>
+    {/* ড্যাশবোর্ড মেনু লিংকস */}
+    <div className="p-2 space-y-1">
+      <Link href="/dashboard/my-listings" onClick={() => setDropdownOpen(false)} className="flex items-center gap-2 w-full px-4 py-2.5 text-slate-300 hover:bg-slate-800 font-medium rounded-xl text-xs transition-all">
+        <LayoutDashboard size={14} /> My Listings
+      </Link>
+      
+      <Link href="/dashboard/my-requests" onClick={() => setDropdownOpen(false)} className="flex items-center gap-2 w-full px-4 py-2.5 text-slate-300 hover:bg-slate-800 font-medium rounded-xl text-xs transition-all">
+        <GitPullRequest size={14} /> My Requests
+      </Link>
+      
+      <Link href="/dashboard/add-pet" onClick={() => setDropdownOpen(false)} className="flex items-center gap-2 w-full px-4 py-2.5 text-slate-300 hover:bg-slate-800 font-medium rounded-xl text-xs transition-all">
+        <PlusCircle size={14} /> Add Pet
+      </Link>
 
-                    <button
-                      onClick={handleLogout}
-                      className="flex items-center gap-2 w-full px-4 py-2 text-rose-500/90 hover:text-rose-400 hover:bg-rose-500/5 font-bold rounded-xl text-xs text-left transition-all"
-                    >
-                      <LogOut size={14} />
-                      Logout
-                    </button>
-                  </div>
+      <div className="border-t border-slate-800 my-1"></div>
 
-                </div>
-              )}
+      <button 
+        onClick={handleLogout}
+        className="flex items-center gap-2 w-full px-4 py-2 text-rose-500/90 hover:text-rose-400 hover:bg-rose-500/5 font-bold rounded-xl text-xs text-left transition-all"
+      >
+        <LogOut size={14} /> Logout
+      </button>
+    </div>
+  </div>
+)}
             </div>
           )}
 
