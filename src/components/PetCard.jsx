@@ -1,16 +1,33 @@
+"use client";
+
 import Link from "next/link";
 import { MapPin, DollarSign, PawPrint, Calendar, Tag } from "lucide-react";
+import { useSession } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 export default function PetCard({ pet }) {
+  const router = useRouter();
+  const { data: session } = useSession();
+
+  const handleAdopt = () => {
+    if (!session) {
+      router.push(`/login?callbackUrl=/pets/${pet._id}`);
+      return;
+    }
+
+    router.push(`/pets/${pet._id}`);
+  };
+
+
   return (
     <div className="group bg-[#0b1120] border border-slate-800 rounded-3xl p-5 transition-all duration-300 hover:border-pink-500/50 hover:shadow-2xl">
       
     
       <div className="relative h-60 overflow-hidden rounded-2xl mb-5">
         <img 
-          src={pet.imageUrl} 
-          alt={pet.name} 
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+         src={pet.imageUrl || pet.image}
+         alt={pet.name || pet.petName}
+         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
         />
      
         <div className="absolute top-4 left-4">
@@ -50,19 +67,22 @@ export default function PetCard({ pet }) {
       </div>
 
     
-      <div className="flex gap-2">
-        <Link 
-          href={`/pet-details/${pet._id}`} 
-          className="flex-1 text-center py-3 rounded-xl text-xs font-bold border border-slate-700 text-slate-300 hover:bg-slate-800 transition-all"
+        <div className="flex gap-2 mt-4">
+
+        <Link
+          href={`/pet-details/${pet._id}`}
+          className="flex-1 text-center py-3 rounded-xl text-xs font-bold border border-slate-700 text-slate-300"
         >
           View Details
         </Link>
-        <Link 
-          href={`/pet-details/${pet._id}`} 
-          className="flex-1 text-center py-3 rounded-xl text-xs font-bold bg-gradient-to-r from-pink-500 to-cyan-500 text-white hover:opacity-90 transition-all"
+
+        <button
+          onClick={handleAdopt}
+          className="flex-1 py-3 rounded-xl text-xs font-bold bg-gradient-to-r from-pink-500 to-cyan-500 text-white"
         >
-          ADOPT Now
-        </Link>
+          Adopt Now
+        </button>
+
       </div>
     </div>
   );

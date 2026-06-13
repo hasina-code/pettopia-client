@@ -21,13 +21,12 @@ const AllPetsPage = () => {
     { label: "Rabbits", value: "Rabbit" },
   ];
 
-  // সুরক্ষিত API কল
   const fetchPets = async () => {
     setLoading(true);
     try {
       const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5000";
       
-      // সঠিক পদ্ধতিতে Query params তৈরি করা
+     
       const params = new URLSearchParams();
       if (searchQuery.trim()) params.append("search", searchQuery);
       if (selectedSpecies) params.append("species", selectedSpecies);
@@ -44,11 +43,11 @@ const AllPetsPage = () => {
     }
   };
 
-  // Hydration Mismatch এড়াতে useEffect ব্যবহার
+
   useEffect(() => {
     setIsMounted(true);
     fetchPets();
-  }, [selectedSpecies, sortOrder]); // searchQuery এখানে রাখিনি কারণ এটি সাবমিট বাটনে কাজ করবে
+  }, [selectedSpecies, sortOrder]); 
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -59,10 +58,11 @@ const AllPetsPage = () => {
     setSearchQuery("");
     setSelectedSpecies("");
     setSortOrder("low-to-high");
-    // রিসেট করার পর সাথে সাথে fetchPets কল হবে না, তাই ম্যানুয়ালি করতে হবে
+   
   };
 
-  // রেন্ডারিং কন্ট্রোল
+ 
+  
   if (!isMounted) return null;
 
   return (
@@ -70,7 +70,7 @@ const AllPetsPage = () => {
       <div className="max-w-7xl mx-auto px-4">
         <div className="text-center max-w-3xl mx-auto mb-14">
           <h1 className="text-4xl md:text-5xl font-black text-white mb-4">
-            Browse All Available <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-cyan-400">Pets</span>
+            Browse All <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-cyan-400">Available Pets</span>
           </h1>
         </div>
 
@@ -105,7 +105,7 @@ const AllPetsPage = () => {
               <button
                 key={option.label}
                 onClick={() => setSelectedSpecies(option.value)}
-                className={`px-5 py-2.5 rounded-xl text-sm font-bold border ${selectedSpecies === option.value ? "bg-pink-500 border-transparent" : "bg-slate-900 border-slate-800"}`}
+                className={`px-5 py-2.5 rounded-xl text-sm font-bold border ${selectedSpecies === option.value ? "bg-pink-500 to-cyan-500 border-transparent" : "bg-slate-900 border-slate-800"}`}
               >
                 {option.label}
               </button>

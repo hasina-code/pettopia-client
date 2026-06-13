@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "react-hot-toast";
@@ -7,51 +8,127 @@ import Link from "next/link";
 
 export default function RegisterPage() {
   const router = useRouter();
-  const [password, setPassword] = useState("");
+
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    image: "",
+  });
+
+  const [loading, setLoading] = useState(false);
+
+  const isValidPassword =
+    form.password.length >= 6 &&
+    /[A-Z]/.test(form.password) &&
+    /[a-z]/.test(form.password);
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
-    const { name, email, password, confirmPassword, photoURL } = Object.fromEntries(formData);
 
-    if (password !== confirmPassword) return toast.error("Passwords do not match!");
-    
-    const { error } = await authClient.signUp.email({ email, password, name, image: photoURL });
-    
-    if (error) {
-      toast.error(error.message);
-    } else {
-      toast.success("Account created successfully!");
+    if (!form.name || !form.email || !form.password || !form.confirmPassword) {
+      return toast.error("All fields are required!");
+    }
+
+    if (form.password !== form.confirmPassword) {
+      return toast.error("Passwords do not match!");
+    }
+
+    if (!isValidPassword) {
+      return toast.error("Weak password!");
+    }
+
+    try {
+      setLoading(true);
+
+      const res = await authClient.signUp.email({
+        email: form.email,
+        password: form.password,
+        name: form.name,
+        image: form.image || "",
+      });
+
+      if (res?.error) {
+        toast.error(res.error.message || "Registration failed");
+        return;
+      }
+
+      toast.success("Account created!");
       router.push("/login");
+    } catch (err) {
+      toast.error("Something went wrong!");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-950 p-4">
-      <form onSubmit={handleRegister} className="w-full max-w-md bg-slate-900 p-8 rounded-3xl border border-slate-800">
-        <h2 className="text-2xl font-black text-white mb-6">Create your account</h2>
-        
-        <input name="name" placeholder="Full Name" className="w-full p-3 mb-4 rounded-xl bg-slate-950 border border-slate-800 text-white" required />
-        <input name="email" type="email" placeholder="Email address" className="w-full p-3 mb-4 rounded-xl bg-slate-950 border border-slate-800 text-white" required />
-        <input name="photoURL" placeholder="Photo URL (optional)" className="w-full p-3 mb-4 rounded-xl bg-slate-950 border border-slate-800 text-white" />
-        
-        <input 
-          name="password" type="password" placeholder="Password" 
-          onChange={(e) => setPassword(e.target.value)}
-          className="w-full p-3 mb-2 rounded-xl bg-slate-950 border border-slate-800 text-white" required 
-        />
-        
-        {/* Validation UI */}
-        <div className="text-xs text-slate-400 mb-4 space-y-1">
-          <p className={password.length >= 6 ? "text-green-500" : ""}>✓ At least 6 characters</p>
-          <p className={/[A-Z]/.test(password) ? "text-green-500" : ""}>✓ One uppercase letter</p>
-          <p className={/[a-z]/.test(password) ? "text-green-500" : ""}>✓ One lowercase letter</p>
-        </div>
+    <div className="min-h-screen flex items-center justify-center bg-slate-950 p-6">
+      <form
+        onSubmit={handleRegister}
+        className="w-full max-w-md bg-slate-900 p-8 rounded-3xl border border-slate-800"
+      >
+        <h2 className="text-2xl font-bold text-white mb-6">
+          Create Account
+        </h2>
 
-        <input name="confirmPassword" type="password" placeholder="Confirm Password" className="w-full p-3 mb-6 rounded-xl bg-slate-950 border border-slate-800 text-white" required />
-        
-        <button className="w-full py-3 bg-gradient-to-r from-pink-500 to-cyan-500 rounded-xl font-bold text-white">Create Account</button>
-        <p className="text-center text-slate-400 mt-4 text-sm">Already have an account? <Link href="/login" className="text-pink-500">Sign in</Link></p>
+        <input
+          name="name"
+          placeholder="Full Name"
+          onChange={handleChange}
+          className="w-full p-3 mb-4 rounded-xl bg-slate-950 text-white border border-slate-700"
+        />
+
+        <input
+          name="email"
+          type="email"
+          placeholder="Email"
+          onChange={handleChange}
+          className="w-full p-3 mb-4 rounded-xl bg-slate-950 text-white border border-slate-700"
+        />
+
+        <input
+          name="image"
+          placeholder="Photo URL (optional)"
+          onChange={handleChange}
+          className="w-full p-3 mb-4 rounded-xl bg-slate-950 text-white border border-slate-700"
+        />
+
+        <input
+          name="password"
+          type="password"
+          placeholder="Password"
+          onChange={handleChange}
+          className="w-full p-3 mb-4 rounded-xl bg-slate-950 text-white border border-slate-700"
+        />
+
+        <input
+          name="confirmPassword"
+          type="password"
+          placeholder="Confirm Password"
+          onChange={handleChange}
+          className="w-full p-3 mb-6 rounded-xl bg-slate-950 text-white border border-slate-700"
+        />
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full py-3 bg-gradient-to-r from-pink-500 to-cyan-500 rounded-xl text-white font-bold"
+        >
+          {loading ? "Creating..." : "Create Account"}
+        </button>
+
+        <p className="text-center mt-4 text-slate-400 text-sm">
+          Already have account?{" "}
+          <Link href="/login" className="text-pink-500">
+            Login
+          </Link>
+        </p>
       </form>
     </div>
   );

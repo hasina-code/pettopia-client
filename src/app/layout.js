@@ -1,27 +1,30 @@
-import { Toaster } from "react-hot-toast";
-
-
-import "./globals.css";
+import { AuthProvider } from "@/context/AuthProvider";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-
+import { Toaster } from "react-hot-toast";
+import "./globals.css";
 
 export const metadata = {
-  title: "Pettopia - Pet Adoption Platform",
-  description: "Find your new furry companion today!",
+  title: "PetTopia",
+  description: "Pet Adoption Platform",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="bg-slate-50 text-slate-900 antialiased">
-        <Navbar/>
-        <main className="min-h-[calc(100vh-16rem)]">
-          {children}
-        <Footer/>
-        </main>
+      <body
+        suppressHydrationWarning
+        className="bg-slate-900 text-slate-50 antialiased"
+      >
+        <AuthProvider>
+          <Navbar />
 
-        <Toaster position="top-center" reverseOrder={false} />
+          {children}
+
+          <Footer />
+
+          <Toaster position="top-right" />
+        </AuthProvider>
       </body>
     </html>
   );

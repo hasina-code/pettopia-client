@@ -5,7 +5,7 @@ export default async function FeaturedPets() {
 
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/pets?limit=6`,
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/pets?limit=6`,
       { cache: "no-store" }
     );
 
