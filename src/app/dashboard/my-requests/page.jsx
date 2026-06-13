@@ -78,7 +78,53 @@ export default function MyRequestsPage() {
           ))}
         </div>
 
-       
+        {requests.length === 0 ? (
+          <div className="bg-slate-900 p-8 rounded-2xl text-center border border-slate-800">No Requests Found</div>
+        ) : (
+          <div className="overflow-x-auto bg-slate-900 rounded-2xl border border-slate-800">
+            <table className="w-full text-left text-sm md:text-base">
+              <thead>
+                <tr className="text-slate-400 border-b border-slate-800">
+                  <th className="p-3 md:p-4">Pet Name</th>
+                  <th className="p-3 md:p-4">Request Date</th>
+                  <th className="p-3 md:p-4 hidden md:table-cell">Pickup Date</th>
+                  <th className="p-3 md:p-4">Status</th>
+                  <th className="p-3 md:p-4 text-center">Actions</th>
+                </tr>
+              </thead>
+              <tbody>{requests.map((request) => (
+                <tr key={request._id} className="border-b border-slate-800 hover:bg-slate-800/30">
+                  <td className="p-3 md:p-4 font-semibold">{request.petName}</td>
+                  <td className="p-3 md:p-4">{new Date(request.createdAt).toLocaleDateString()}</td>
+                  <td className="p-3 md:p-4 hidden md:table-cell">{request.pickupDate}</td>
+                  <td className="p-3 md:p-4">
+                    <span className={`px-2 md:px-3 py-1 rounded-full text-[10px] md:text-xs font-medium capitalize ${
+                      request.status === "approved" ? "bg-green-500/20 text-green-400" :
+                      request.status === "rejected" ? "bg-red-500/20 text-red-400" : "bg-yellow-500/20 text-yellow-400"
+                    }`}>{request.status}</span>
+                  </td>
+                  <td className="p-3 md:p-4 flex flex-col md:flex-row items-center justify-center gap-2 md:gap-4">
+                    <Link href={`/pet-details/${request.petId}`} className="text-cyan-400 hover:text-cyan-300 flex items-center gap-1">
+                      <Eye size={16} /> <span className="hidden md:inline">View</span>
+                    </Link>
+                    {request.status === 'pending' && (
+                      <button 
+                        onClick={() => { setSelectedRequestId(request._id); setSelectedPetName(request.petName); setIsModalOpen(true); }} 
+                        className="text-red-400 hover:text-red-300 font-medium text-xs md:text-sm"
+                      >
+                        Cancel
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              ))}</tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      
+    </div>
     
   );
 }
