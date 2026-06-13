@@ -1,7 +1,7 @@
 export default function DashboardPage() {
   return (
     <div className="p-4 md:p-8 bg-slate-950 min-h-screen text-white">
-      {/* হেডার */}
+     
       <div className="flex flex-col md:flex-row md:items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500">
@@ -14,7 +14,7 @@ export default function DashboardPage() {
         </button>
       </div>
 
-      {/* স্ট্যাটাস কার্ডস */}
+     
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {[
           { title: "Total Pets", count: "12", color: "from-blue-500 to-cyan-500" },
@@ -30,9 +30,9 @@ export default function DashboardPage() {
         ))}
       </div>
 
-      {/* গ্রিড লেআউট */}
+   
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* এক্টিভিটি সেকশন */}
+        
         <div className="bg-slate-900 p-6 rounded-2xl border border-slate-800">
           <h2 className="text-lg font-semibold mb-6">Recent Requests</h2>
           <div className="space-y-4">
@@ -48,7 +48,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* কুইক অ্যাকশন */}
+       
         <div className="bg-slate-900 p-6 rounded-2xl border border-slate-800">
           <h2 className="text-lg font-semibold mb-6">System Status</h2>
           <div className="space-y-6">
