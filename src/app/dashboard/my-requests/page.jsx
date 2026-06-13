@@ -123,7 +123,21 @@ export default function MyRequestsPage() {
         )}
       </div>
 
-      
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+          <div className="bg-[#0b1329] border border-slate-700 p-6 rounded-2xl w-full max-w-sm shadow-2xl">
+            <div className="flex items-center gap-3 mb-4 text-red-500">
+              <XCircle size={24} />
+              <h3 className="text-lg font-bold">Cancel Adoption Request</h3>
+            </div>
+            <p className="text-slate-400 text-sm mb-6">Are you sure you want to cancel your adoption request for <strong>{selectedPetName}</strong>? This action cannot be undone.</p>
+            <div className="flex gap-3">
+              <button onClick={() => setIsModalOpen(false)} className="flex-1 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 font-semibold">Keep Request</button>
+              <button onClick={handleConfirmCancel} className="flex-1 py-2 rounded-lg bg-red-600 hover:bg-red-700 font-semibold">Yes, Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
     
   );
