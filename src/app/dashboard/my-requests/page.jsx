@@ -1,11 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
 
-import axios from "axios";
+
 import toast from "react-hot-toast";
 import Link from "next/link";
 import { XCircle, Loader2, Eye } from "lucide-react";
 import { useSession } from "@/lib/auth-client";
+import api from "@/lib/axios";
 
 
 export default function MyRequestsPage() {
@@ -23,15 +24,14 @@ export default function MyRequestsPage() {
     else if (!loading && !user) setPageLoading(false);
   }, [user, loading]);
 
-  const fetchRequests = async () => {
-    try {
-    const res = await axios.get(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/my-requests/${user.email}`
-    );
-
+const fetchRequests = async () => {
+  try {
+    const token = session?.token || session?.accessToken; 
+    const res = await api.get(`/my-requests/${user.email}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
     setRequests(res.data);
   } catch (error) {
-    console.log(error);
     toast.error("Failed to load requests");
   } finally {
     setPageLoading(false);
@@ -43,18 +43,19 @@ export default function MyRequestsPage() {
   const approved = requests.filter(r => r.status === 'approved').length;
   const rejected = requests.filter(r => r.status === 'rejected').length;
 
-  const handleConfirmCancel = async () => {
-    try {
-      await axios.delete(
-  `${process.env.NEXT_PUBLIC_SERVER_URL}/adoption-requests/${selectedRequestId}`
-);
-      toast.success("Request cancelled successfully");
-      setRequests(requests.filter((r) => r._id !== selectedRequestId));
-      setIsModalOpen(false);
-    } catch (error) {
-      toast.error("Failed to cancel request");
-    }
-  };
+ const handleConfirmCancel = async () => {
+  try {
+    const token = session?.token || session?.accessToken;
+    await api.delete(`/adoption-requests/${selectedRequestId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    toast.success("Request cancelled successfully");
+    setRequests(requests.filter((r) => r._id !== selectedRequestId));
+    setIsModalOpen(false);
+  } catch (error) {
+    toast.error("Failed to cancel request");
+  }
+};
 
   if (loading || pageLoading) return <div className="min-h-screen flex justify-center items-center bg-slate-950"><Loader2 className="animate-spin text-pink-500" size={40} /></div>;
 

@@ -33,7 +33,7 @@ export default function SuccessStories() {
         {/* Header */}
         <div className="text-center mb-16">
           <span className="inline-block px-5 py-2 rounded-full bg-white/10 border border-white/10 text-pink-500 text-sm font-bold tracking-wide mb-5">
-            🥩 Success Stories
+             Success Stories
           </span>
         
           <h2 className="text-4xl md:text-5xl font-black mb-4">Happy Tails & Happy Homes</h2>

@@ -16,6 +16,7 @@ import {
   X,
   Clock
 } from "lucide-react";
+import api from "@/lib/axios";
 
 export default function RequestsModal({
   petId,
@@ -37,16 +38,10 @@ export default function RequestsModal({
   try {
     setLoading(true);
 
-    const res = await axios.get(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/pet-requests/${petId}`,
-      {
-        withCredentials: true,
-      }
-    );
-
-    console.log("Pet ID:", petId);
-    console.log("Requests:", res.data);
-
+    const token = localStorage.getItem("token"); 
+    const res = await api.get(`/pet-requests/${petId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
 
     setRequests(res.data);
 
@@ -58,14 +53,11 @@ export default function RequestsModal({
   }
 };
 const handleApprove = async (requestId) => {
-    try {
-      await axios.patch(
-  `${process.env.NEXT_PUBLIC_SERVER_URL}/approve-request/${requestId}`,
-  {},
-  {
-    withCredentials: true,
-  }
-);
+  try {
+    const token = localStorage.getItem("token");
+    await api.patch(`/approve-request/${requestId}`, {}, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
       toast.success("Request Approved");
       fetchRequests();
       if (onAction) onAction();
@@ -75,21 +67,18 @@ const handleApprove = async (requestId) => {
   };
 
   const handleReject = async (requestId) => {
-    try {
-     await axios.patch(
-  `${process.env.NEXT_PUBLIC_SERVER_URL}/reject-request/${requestId}`,
-  {},
-  {
-    withCredentials: true,
+  try {
+    const token = localStorage.getItem("token"); 
+    await api.patch(`/reject-request/${requestId}`, {}, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    toast.success("Request Rejected");
+    fetchRequests();
+    if (onAction) onAction();
+  } catch (error) {
+    toast.error("Reject Failed");
   }
-);
-      toast.success("Request Rejected");
-      fetchRequests();
-      if (onAction) onAction();
-    } catch (error) {
-      toast.error("Reject Failed");
-    }
-  };
+};
 
   if (!open) return null;
 

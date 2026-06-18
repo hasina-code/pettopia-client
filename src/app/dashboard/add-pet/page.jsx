@@ -1,60 +1,63 @@
 "use client";
 
 import { useState } from "react";
-import axios from "axios";
+
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import { PawPrint, UploadCloud, Save, X } from "lucide-react"; 
+import api from "@/lib/axios";
 
 export default function AddPetPage() {
-  const router = useRouter();
   const { data: session } = authClient.useSession();
+  const router = useRouter();
+  
   const [loading, setLoading] = useState(false);
 
+  
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const form = e.target;
-    const petData = {
-      name: form.petName.value,
-      species: form.species.value,
-      breed: form.breed.value,
-      age: form.age.value,
-      gender: form.gender.value,
-      imageUrl: form.image.value,
-      healthStatus: form.healthStatus.value,
-      vaccinationStatus: form.vaccinationStatus.value,
-      location: form.location.value,
-      adoptionFee: Number(form.adoptionFee.value),
-      description: form.description.value,
-      ownerEmail: session?.user?.email,
-      ownerName: session?.user?.name,
-      adopted: false,
-      status: "available",
-      createdAt: new Date(),
-    };
+  e.preventDefault();
 
-    try {
-      setLoading(true);
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/pets`,
-        petData,
-        {
-          withCredentials: true,
-        }
-      );
-      if (res.data.insertedId) {
-        toast.success("Pet listing created successfully!");
-        form.reset();
-        router.push("/dashboard/my-listings");
-      }
-    } catch (error) {
-      toast.error("Failed to add pet. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+  const form = e.target;
+
+  const token = session?.token || session?.accessToken; 
+  console.log("TOKEN:", token);
+
+  const petData = {
+    name: form.petName.value,
+    species: form.species.value,
+    breed: form.breed.value,
+    age: form.age.value,
+    gender: form.gender.value,
+    imageUrl: form.image.value,
+    healthStatus: form.healthStatus.value,
+    vaccinationStatus: form.vaccinationStatus.value,
+    location: form.location.value,
+    adoptionFee: Number(form.adoptionFee.value),
+    description: form.description.value,
+    ownerEmail: session?.user?.email,
+    ownerName: session?.user?.name,
+    adopted: false,
+    status: "available",
+    createdAt: new Date(),
   };
 
+  try {
+    setLoading(true);
+
+    await api.post('/pets', petData, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+    toast.success("Pet added successfully!");
+    router.push("/dashboard/my-listings");
+
+  } catch (error) {
+    toast.error("Failed to add pet");
+  } finally {
+    setLoading(false);
+  }
+};
   return (
     <div className="min-h-screen bg-[#020817] p-4 md:p-8 flex items-center justify-center">
       <div className="max-w-4xl w-full bg-[#0f172a] p-8 rounded-3xl shadow-2xl border border-slate-800 backdrop-blur-sm">

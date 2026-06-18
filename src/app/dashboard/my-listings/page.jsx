@@ -1,7 +1,7 @@
 "use client";
 import { useSession } from "@/lib/auth-client";
 import { useEffect, useState } from "react";
-import axios from "axios";
+
 import Link from "next/link";
 import Image from "next/image";
 import { toast } from "react-hot-toast";
@@ -9,6 +9,7 @@ import { toast } from "react-hot-toast";
 import RequestsModal from "@/components/RequestsModal";
 import { Plus, Trash2, Edit3, Eye, Inbox, PawPrint, CheckCircle2 } from "lucide-react";
 import DeletePetModal from "@/components/DeletePetModal";
+import api from "@/lib/axios";
 
 export default function MyListingsPage() {
  
@@ -16,7 +17,7 @@ const { data: session, isPending } = useSession();
 const user = session?.user;
 const loading = isPending;
 
-
+const token = session?.token || session?.accessToken;
   const [pets, setPets] = useState([]);
   const [pageLoading, setPageLoading] = useState(true);
   const [selectedPetId, setSelectedPetId] = useState(null);
@@ -34,49 +35,35 @@ const [selectedPetName, setSelectedPetName] = useState("");
   }
 }, [user, loading]);
 
-  const fetchPets = async () => {
-  try {
-    const res = await axios.get(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/my-pets/${user.email}`,
-      {
-        withCredentials: true,
-      }
-    );
+const fetchPets = async () => {
+    try {
+      const res = await api.get(`/my-pets/${user.email}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+      setPets(res.data); 
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to load pets");
+    } finally {
+      setPageLoading(false);
+    }
+  };
 
-    console.log(res.data);
+const confirmDelete = async () => {
+    try {
+      
+    await api.delete(`/pets/${selectedPet._id}`, {
+         headers: { Authorization: `Bearer ${token}` }
+      });
 
-    setPets(res.data); 
-
-  } catch (error) {
-    console.error(error);
-    toast.error("Failed to load pets");
-  } finally {
-    setPageLoading(false);
-  }
-};
-
-  const confirmDelete = async () => {
-  try {
- await axios.delete(
-  `${process.env.NEXT_PUBLIC_SERVER_URL}/pets/${selectedPet._id}`,
-  {
-    withCredentials: true,
-  }
-);
-
-    toast.success("Pet deleted successfully");
-
-    setPets((prev) =>
-      prev.filter((pet) => pet._id !== selectedPet._id)
-    );
-
-    setDeleteModal(false);
-    setSelectedPet(null);
-
-  } catch (error) {
-    toast.error("Delete failed");
-  }
-};
+      toast.success("Pet deleted successfully");
+      setPets((prev) => prev.filter((pet) => pet._id !== selectedPet._id));
+      setDeleteModal(false);
+      setSelectedPet(null);
+    } catch (error) {
+      toast.error("Delete failed");
+    }
+  };
 
   if (loading || pageLoading) {
     return <div className="min-h-screen flex justify-center items-center bg-slate-950 text-pink-500"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-500"></div></div>;

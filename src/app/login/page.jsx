@@ -5,7 +5,7 @@ import { authClient } from "@/lib/auth-client";
 import { toast } from "react-hot-toast";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-
+import { FcGoogle } from "react-icons/fc";
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -31,7 +31,6 @@ export default function LoginPage() {
         password,
       });
 
-      // ✅ Better Auth correct check
       if (res?.error) {
         toast.error(res.error.message || "Login failed");
         return;
@@ -71,14 +70,15 @@ export default function LoginPage() {
         </h2>
 
         {/* Google */}
-        <button
-          type="button"
-          onClick={handleGoogleLogin}
-          disabled={loading}
-          className="w-full py-3 bg-white text-black rounded-xl mb-4 font-bold"
-        >
-          Continue with Google
-        </button>
+<button
+  type="button"
+  onClick={handleGoogleLogin}
+  disabled={loading}
+  className="w-full flex items-center justify-center gap-3 py-3 bg-white text-black hover:bg-slate-100 transition-colors duration-200 rounded-xl mb-4 font-bold disabled:opacity-70 disabled:cursor-not-allowed"
+>
+      <FcGoogle size={20} />
+      <span>Continue with Google</span>
+</button>
 
         <div className="text-center text-slate-500 mb-4">
           or login with email

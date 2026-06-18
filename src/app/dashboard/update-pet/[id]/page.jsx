@@ -2,44 +2,47 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import axios from "axios";
 import toast from "react-hot-toast";
 import { ArrowLeft, PawPrint, Save, X } from "lucide-react";
+import api from "@/lib/axios";
+import { useSession } from "@/lib/auth-client";
 
 export default function UpdatePetPage() {
   const { id } = useParams();
   const router = useRouter();
+  const { data: session } = useSession();
+  const token = session?.token || session?.accessToken;
 
   const [pet, setPet] = useState(null);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
-
+  
   useEffect(() => {
     const fetchPet = async () => {
       try {
-       const res = await axios.get(
-  `${process.env.NEXT_PUBLIC_SERVER_URL}/pets/${id}`,
-  {
-    withCredentials: true,
-  }
-);
-
-        console.log("Pet Data:", res.data);
+        setLoading(true);
+        const res = await api.get(`/pets/${id}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
         setPet(res.data);
       } catch (error) {
-        console.error(error);
+        console.error("Fetch Error:", error);
         toast.error("Failed to load pet data");
       } finally {
         setLoading(false);
       }
     };
 
-    if (id) fetchPet();
-  }, [id]);
+    if (id) {
+      fetchPet();
+    } else {
+      setLoading(false);
+    }
+  }, [id, token]);
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-
+    setUpdating(true);
     const form = e.target;
 
     const updatedPet = {
@@ -54,28 +57,24 @@ export default function UpdatePetPage() {
       adoptionFee: Number(form.adoptionFee.value),
       description: form.description.value,
     };
+   try {
+  const res = await api.put(`/pets/${id}`, updatedPet, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
 
-    try {
- const res = await axios.put(
-  `${process.env.NEXT_PUBLIC_SERVER_URL}/pets/${id}`,
-  updatedPet,
-  {
-    withCredentials: true,
+  
+  if (res.data.success || res.data.acknowledged) {
+    toast.success("Pet Updated Successfully");
+    router.push("/dashboard/my-listings");
+  } else {
+    toast.error("Update failed");
   }
-);
-     
-     
+} catch (error) {
+  console.error(error);
+  toast.error("Update Failed");
+}
 
-      if (res.data.modifiedCount > 0 || res.data.acknowledged) {
-        toast.success("Pet Updated Successfully");
-        router.push("/dashboard/my-listings");
-      } else {
-        toast.error("No changes were made");
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("Update Failed");
-    } finally {
+    finally {
       setUpdating(false);
     }
   };
@@ -264,37 +263,37 @@ export default function UpdatePetPage() {
             </div>
 
             <div className="md:col-span-2 flex flex-col sm:flex-row justify-center gap-4 mt-8">
-  <button
-    type="button"
-    onClick={() => router.push("/dashboard/my-listings")}
-    className="flex items-center justify-center gap-2 px-8 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white font-semibold transition-all duration-300 hover:scale-105"
-  >
-    <X size={18} />
-    Cancel
-  </button>
+              <button
+                type="button"
+                onClick={() => router.push("/dashboard/my-listings")}
+                className="flex items-center justify-center gap-2 px-8 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white font-semibold transition-all duration-300 hover:scale-105"
+              >
+                <X size={18} />
+                Cancel
+              </button>
 
-  <button
-    type="submit"
-    disabled={updating}
-    className="flex items-center justify-center gap-2 px-8 py-3 rounded-xl bg-gradient-to-r from-pink-600 to-rose-500 hover:from-pink-700 hover:to-rose-600 text-white font-semibold transition-all duration-300 hover:scale-105 shadow-lg shadow-pink-900/30"
-  >
-    {updating ? (
-      <>
-        <span className="loading loading-spinner loading-sm"></span>
-        Updating...
-      </>
-    ) : (
-      <>
-        <Save size={18} />
-        Save Changes
-      </>
-    )}
-  </button>
-</div>
+              <button
+                type="submit"
+                disabled={updating}
+                className="flex items-center justify-center gap-2 px-8 py-3 rounded-xl bg-gradient-to-r from-pink-600 to-rose-500 hover:from-pink-700 hover:to-rose-600 text-white font-semibold transition-all duration-300 hover:scale-105 shadow-lg shadow-pink-900/30"
+              >
+                {updating ? (
+                  <>
+                    <span className="loading loading-spinner loading-sm"></span>
+                    Updating...
+                  </>
+                ) : (
+                  <>
+                    <Save size={18} />
+                    Save Changes
+                  </>
+                )}
+              </button>
+            </div>
           </form>
         </div>
       </div>
     </div>
-   
+
   );
 }

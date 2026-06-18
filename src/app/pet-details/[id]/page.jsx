@@ -13,7 +13,7 @@ import {
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import axios from "axios";
+
 import toast from "react-hot-toast";
 
 import { useSession } from "@/lib/auth-client";
@@ -22,6 +22,7 @@ import AdoptionSuccessModal from "@/components/AdoptionSuccessModal";
 import OwnerWarningModal from "@/components/OwnerWarningModal";
 import InputField from "@/components/InputField";
 import InfoBox from "@/components/InfoBox";
+import api from "@/lib/axios";
 
 export default function PetDetailsPage() {
   const { id } = useParams();
@@ -52,20 +53,17 @@ export default function PetDetailsPage() {
   useEffect(() => {
     if (!id) return;
 
-    const fetchPet = async () => {
-      try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_SERVER_URL}/pets/${id}`
-        );
-
-        const data = await res.json();
-        setPet(data);
-      } catch (err) {
-        console.log(err);
-      } finally {
-        setLoading(false);
-      }
-    };
+const fetchPet = async () => {
+  try {
+    const res = await api.get(`/pets/${id}`); 
+   
+    setPet(res.data); 
+  } catch (err) {
+    console.error(err);
+  } finally {
+    setLoading(false);
+  }
+};
 
     fetchPet();
   }, [id]);
@@ -84,10 +82,9 @@ const handleAdoptionRequest = async (e) => {
   }
 
   try {
-    const res = await axios.post(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/adoption-requests`,
-      {
-        petId: pet._id,
+  const token = session?.token || session?.accessToken;
+    const res = await api.post('/adoption-requests', {
+      petId: pet._id,
         petName: pet.name,
         petImage: pet.image || pet.imageUrl,
         ownerEmail: pet.ownerEmail,
@@ -95,8 +92,9 @@ const handleAdoptionRequest = async (e) => {
         userEmail: user.email,
         pickupDate: formData.pickupDate,
         message: formData.message,
-      }
-    );
+   }, {
+        headers: { Authorization: `Bearer ${token}` }
+    });
 
     if (res.data.insertedId) {
       toast.success("Request sent!");
