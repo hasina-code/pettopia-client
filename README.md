@@ -1,36 +1,44 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🐾 PetTopia
 
-## Getting Started
+## Purpose
 
-First, run the development server:
+PetTopia is a modern pet adoption platform designed for pet owners and animal lovers. Users can explore pets available for adoption, view detailed pet information, submit adoption requests, and manage their requests. The platform aims to create a safe and supportive community that helps pets find loving homes.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Live URL
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+🔗 https://pettopia-client.vercel.app
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Features
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Secure authentication with Email/Password and Google Login.
+- Browse all available pets with search and filtering functionality.
+- View detailed pet profiles and submit adoption requests.
+- Pet owners can add, update, and delete pet listings.
+- Approve or reject adoption requests from interested adopters.
+- Manage personal adoption requests and track request status.
+- JWT authentication with HTTPOnly cookies for enhanced security.
+- Fully responsive design for mobile, tablet, and desktop devices.
 
-## Learn More
+## NPM Packages Used
 
-To learn more about Next.js, take a look at the following resources:
+### Client Side
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Next.js
+- React
+- Axios
+- React Hot Toast
+- React Icons
+- Lucide React
+- Tailwind CSS
+- Framer Motion
+- Better Auth
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Server Side
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Express.js
+- MongoDB
+- JSON Web Token (JWT)
+- Cookie Parser
+- CORS
+- Dotenv
+- Better Auth
