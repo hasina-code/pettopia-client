@@ -9,16 +9,15 @@ export default function PetCard({ pet }) {
   const router = useRouter();
   const { data: session } = useSession();
 
-  const handleAdopt = () => {
-    if (!session) {
-      router.push(`/login?callbackUrl=/pets/${pet._id}`);
-      return;
-    }
+const handleAdopt = () => {
+  if (!session) {
+    router.push(`/login?callbackUrl=/pet-details/${pet._id}`);
+    return;
+  }
 
-    router.push(`/pets/${pet._id}`);
+
+    router.push(`/pet-details/${pet._id}`);
   };
-
-
   return (
     <div className="group bg-[#0b1120] border border-slate-800 rounded-3xl p-5 transition-all duration-300 hover:border-pink-500/50 hover:shadow-2xl">
       
@@ -75,13 +74,13 @@ export default function PetCard({ pet }) {
         >
           View Details
         </Link>
-
-        <button
-          onClick={handleAdopt}
-          className="flex-1 py-3 rounded-xl text-xs font-bold bg-gradient-to-r from-pink-500 to-cyan-500 text-white"
-        >
-          Adopt Now
-        </button>
+<button
+  onClick={handleAdopt}
+  className="flex-1 py-3 rounded-xl text-xs font-bold bg-gradient-to-r from-pink-500 to-cyan-500 text-white"
+>
+  Adopt Now
+</button>
+      
 
       </div>
     </div>
