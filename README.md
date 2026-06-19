@@ -1,4 +1,4 @@
-# 🐾 PetTopia
+# PetTopia
 
 ## Purpose
 
@@ -24,6 +24,7 @@ PetTopia is a modern pet adoption platform designed for pet owners and animal lo
 ### Client Side
 
 - Next.js
+- Hero Ui
 - React
 - Axios
 - React Hot Toast
@@ -31,6 +32,7 @@ PetTopia is a modern pet adoption platform designed for pet owners and animal lo
 - Lucide React
 - Tailwind CSS
 - Framer Motion
+- mongodbAdapter
 - Better Auth
 
 ### Server Side
